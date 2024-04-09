@@ -1,32 +1,27 @@
-
-import client
-import socket 
 from AddStu import AddStu
 from PrintAll import PrintAll
-from client import SocketClient
+import SocketClient as Client
 
+action_list = {
+    "add": AddStu, 
+    "show": PrintAll
+}
 
-host = "127.0.0.1"
-port = 20001
+"""
+add: exit->sent_data
+show: sent_data->PrintAll
+"""
+def main():
+    client = Client.SocketClient(Client.host, Client.port)
+    select_result = "initial"
 
+    while select_result != "exit":
+        select_result = print_menu()
+        try:
+            action_list[select_result](client).execute()
+        except Exception as e:
+            print(e)
 
-          
-def send_add(client_main):
-    parameters = AddStu().execute()
-    client_main.send_command('add', parameters)
-    data = client_main.wait_response()
-    print(f"The client received data => {data}")
-    if data['status'] == 'OK':
-        print(f"Add {parameters} success")
-    else:
-        print(f"Add {parameters} fail")
-
-def send_show(client_main):
-    client_main.send_command('show', {})
-    data = client_main.wait_response()
-    print(f"The client received data => {data}")
-    student_dict = data["parameters"]
-    PrintAll().execute(student_dict)
 
 def print_menu():
     print()
@@ -37,19 +32,4 @@ def print_menu():
 
     return selection
 
-
-action_list = {
-    "add": send_add, 
-    "show": send_show
-}
-def main():
-    client_main = client.SocketClient(host,port)
-    select_result = "initial"
-
-    while select_result != "exit":
-        select_result = print_menu()
-        try:
-            action_list[select_result](client_main)
-        except Exception as e:
-            print(e)
 main()
