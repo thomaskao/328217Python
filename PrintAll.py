@@ -1,16 +1,10 @@
 class PrintAll:
-    def __init__(self):
-        pass
-    def execute(self, student_dict):
-        try:
-            print("\n==== student list ====\n")
-            for i, j in student_dict.items():
-                print('Name:{}'.format(i))
-                for k, l in j.items():
-                    print('   subject: {},score:{}'.format(k, l))
-                print()
-            print ("======================")
 
-        except Exception as e:
-            print(e)
-          
+    def execute(self, student_dict):
+        print("\n==== student list ====\n")
+        for index_1, value_1 in student_dict.items():
+            print('Name:{}'.format(index_1))
+            for index_2, value_2 in value_1['status'].items():
+                print('   subject: {},score:{}'.format(index_2, value_2))
+            print()
+        print("======================")
